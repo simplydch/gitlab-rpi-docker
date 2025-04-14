@@ -1,33 +1,44 @@
 diff --git a/docker/Dockerfile b/docker/Dockerfile
-index 9d81ae1cc..86653147d 100644
+index 4cd4def..95cca6d 100644
 --- a/docker/Dockerfile
 +++ b/docker/Dockerfile
-@@ -1,6 +1,10 @@
- FROM ubuntu:22.04
- MAINTAINER GitLab Inc. <support@gitlab.com>
+@@ -2,6 +2,12 @@ ARG BASE_IMAGE=docker.io/ubuntu:22.04
+ FROM $BASE_IMAGE
  
+ ARG BASE_IMAGE
 +ARG RELEASE_PACKAGE
 +ARG RELEASE_VERSION
 +ARG RELEASE_ARCH
-+
- SHELL ["/bin/sh", "-c"]
- 
- # Default to supporting utf-8
-@@ -16,6 +20,7 @@ RUN apt-get update -q \
-       wget \
-       perl \
-       libperl5.34 \
-+      libatomic1 \
-     && rm -rf /var/lib/apt/lists/*
- 
- # Use BusyBox
-diff --git a/docker/RELEASE b/docker/RELEASE
++ARG RELEASE_REPO
++ARG RELEASE_PACK_URL
++ARG OS_NAME
+ LABEL org.opencontainers.image.authors="GitLab Distribution Team <distribution-be@gitlab.com>" \
+       org.opencontainers.image.documentation="https://docs.gitlab.com/ee/install/docker/" \
+       org.opencontainers.image.source="https://gitlab.com/gitlab-org/omnibus-gitlab" \
+diff --git b/docker/RELEASE b/docker/RELEASE
 new file mode 100644
-index 000000000..8a322a838
+index 0000000..8b05830
 --- /dev/null
 +++ b/docker/RELEASE
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,7 @@
 +RELEASE_PACKAGE=${RELEASE_PACKAGE}
 +RELEASE_VERSION=${RELEASE_VERSION}
 +RELEASE_ARCH=${RELEASE_ARCH}
-+DOWNLOAD_URL=https://packages.gitlab.com/gitlab/raspberry-pi2/packages/raspbian/bullseye/${RELEASE_PACKAGE}_${RELEASE_VERSION}_${RELEASE_ARCH}.deb/download.deb
++RELEASE_REPO=${RELEASE_REPO}
++RELEASE_PACK_URL=${RELEASE_PACK_URL}
++OS_NAME=${OS_NAME}
++DOWNLOAD_URL_FULL=https://packages.gitlab.com/gitlab/${RELEASE_REPO}/packages/${RELEASE_PACK_URL}/${OS_NAME}/${RELEASE_PACKAGE}_${RELEASE_VERSION}_${RELEASE_ARCH}.deb/download.deb
+\ No newline at end of file
+diff --git a/docker/assets/setup b/docker/assets/setup
+index 03e8c6d..0827fd0 100755
+--- a/docker/assets/setup
++++ b/docker/assets/setup
+@@ -18,7 +18,7 @@ else
+   echo "Unknown TARGETARCH: DOWNLOAD_URL not set"
+ fi
+ 
+-DOWNLOAD_URL=${DOWNLOAD_URL} CI_JOB_TOKEN=${CI_JOB_TOKEN} /assets/download-package && dpkg -i /tmp/gitlab.deb 
++DOWNLOAD_URL=${DOWNLOAD_URL_FULL} CI_JOB_TOKEN=${CI_JOB_TOKEN} /assets/download-package && dpkg -i /tmp/gitlab.deb 
+ rm -rf /tmp/gitlab.deb /var/lib/apt/lists/*
+ 
+ unset DOWNLOAD_URL_amd64

@@ -13,6 +13,7 @@ This project allows building manually, and transparently, a Gitlab CE docker ima
 It just clones the official repo and apply a patch on it (see [gitlab-docker-arm.patch](gitlab-docker-arm.patch)) with a few lines fixups in order to build an RPI 4 compatible docker image (with `armhf` arch).
 
 ## How to use it
+- set repo and os information in `versions.mk`
 - (optional) bump version in `versions.mk` (upstream: https://packages.gitlab.com/gitlab/raspberry-pi2)
 - run:
 ```sh
