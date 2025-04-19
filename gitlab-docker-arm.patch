@@ -38,7 +38,8 @@ index 03e8c6d..0827fd0 100755
  fi
  
 -DOWNLOAD_URL=${DOWNLOAD_URL} CI_JOB_TOKEN=${CI_JOB_TOKEN} /assets/download-package && dpkg -i /tmp/gitlab.deb 
-+DOWNLOAD_URL=${DOWNLOAD_URL_FULL} CI_JOB_TOKEN=${CI_JOB_TOKEN} /assets/download-package && dpkg -i /tmp/gitlab.deb 
++DOWNLOAD_URL=${DOWNLOAD_URL_FULL} CI_JOB_TOKEN=${CI_JOB_TOKEN} /assets/download-package && dpkg -i /tmp/gitlab.deb
  rm -rf /tmp/gitlab.deb /var/lib/apt/lists/*
  
  unset DOWNLOAD_URL_amd64
+ 

@@ -4,7 +4,10 @@ omnibus-gitlab:
 	git clone https://gitlab.com/gitlab-org/omnibus-gitlab.git \
 	&& cd omnibus-gitlab \
 	&& git apply ../gitlab-docker-arm.patch
-
+	@if [ "$(CUSTOM_RB_FILE)" = "true" ]; then \
+		cp gitlab.rb ./omnibus-gitlab/docker/assets/gitlab.rb; \
+	fi
+	
 build: omnibus-gitlab
 	@echo Docker build using ${RELEASE_PACKAGE}/${RELEASE_VERSION}
 	docker build --network=host omnibus-gitlab/docker \
